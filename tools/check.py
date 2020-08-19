@@ -11,7 +11,7 @@ from inspect import signature
 
 class Check(object):
     """
-    检查下载后的html
+    适用于各种情景检查功能
     """
 
     @staticmethod
