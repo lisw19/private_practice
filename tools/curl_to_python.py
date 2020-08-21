@@ -159,7 +159,7 @@ curl 'http://bid.chinaemed.com/bid/JsonAllBidList' \
   --compressed \
   --insecure
     """
-    print(curl_parse(cmd, is_return_py=False))
+    curl_parse(cmd, is_return_py=True)
     # print(curl_parse(cmd, is_return_py=True))
     # from spider.cmd_settings import CMD_POST_TEST
     # from_cmd = CMD_POST_TEST

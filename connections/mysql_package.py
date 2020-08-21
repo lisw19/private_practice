@@ -125,8 +125,6 @@ class Mysql(object):
             else:
                 print('[SQL ERROR]: %s\nError Message : %s' % (
                     current_sql, traceback.format_exc()))
-        # if remedy:
-        #     remedy_data(current_sql)
         return False
 
     @staticmethod

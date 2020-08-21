@@ -5,9 +5,9 @@
 ```
 .
 ├── README.md
-├── connections         #数据库连接
+├── connections         #数据库连接封装
 │   ├── __init__.py
-│   └── mysql_package.py
+│   └── mysql_package.py 
 ├── excel_tools        # excel处理
 │   ├── __init__.py
 │   ├── excel_base.py
