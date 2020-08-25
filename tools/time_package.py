@@ -50,11 +50,14 @@ def current_time(time_format='%Y-%m-%d %H:%M:%S'):
     return current_time
 
 
-def get_first_day_of_month(ts=None):
+def get_first_day_of_month(return_type: str = 'int',
+                           ts: int = 0,
+                           return_foramt='%Y-%m-%d %H:%M:%S'):
     """
-    # 获取本月第一天
+    获取本月第一天
     :param ts:
-    :return: 本月第一天时间戳
+    :param return_type: <str> int默认返回时间戳/str 返回日期
+    :return
     """
     if ts:
         day = datetime.datetime.fromtimestamp(ts)
@@ -64,7 +67,11 @@ def get_first_day_of_month(ts=None):
     dt = datetime.datetime(day_of_month.year, day_of_month.month, day_of_month.day, 0, 0, 0)
     t = dt.timetuple()
     time_stamp = int(time.mktime(t))
-    return time_stamp
+    res = time_stamp
+    if return_type == 'str':
+        time_array = time.localtime(time_stamp)
+        res = time.strftime(return_foramt, time_array)
+    return res
 
 
 def get_time_delta(time_type='hours', time_delta=1.0, is_all=False):
@@ -220,24 +227,6 @@ def check_func_time(func):
     return wrapper
 
 
-def get_month_first_last(now_day: datetime.datetime = datetime.datetime.now(), return_type: str = 'str') -> tuple:
-    '''
-    返回上个月第一天和最后一天的日期时间
-    :param now_day: 默认当前时间 <datetime.datetime> 数据类型
-    :param return_type: 返回的类型, 是 str 还是 datetime.datetime
-    :return: 单参数返回<tuple>, 双参数各自返回<return_type所传类型>, date_from 上个月第一天, date_to 上个月最后一天
-      eg: 当前是 7 月份, 则返回2020-06-01 00:00:00, 2020-06-30 23:59:59
-    '''
-    dayscount = datetime.timedelta(days=now_day.day)
-    dayto = now_day - dayscount
-    date_first = datetime.datetime(dayto.year, dayto.month, 1, 0, 0, 0)
-    date_last = datetime.datetime(dayto.year, dayto.month, dayto.day, 23, 59, 59)
-    assert (return_type in ['str', 'datetime']), '只支持返回 str 或 datetime.datetime 格式'
-    if return_type == 'str':
-        return str(date_first), str(date_last)
-    return date_first, date_last
-
-
 if __name__ == '__main__':
     # print(change_to_timestamp())
     # print(current_time())
@@ -247,7 +236,7 @@ if __name__ == '__main__':
     # print(get_date_list('2019-1-1 10:00:00', '2019-10-1', fmt='%d/%m/%Y'))
     # a = change_to_timestamp(date_time(-1), ft='%Y-%m-%d')
     # print(a)
-    print(date_time(-1))
+    print(get_first_day_of_month(return_type='str'))
     # print(get_time_delta(time_type='hours', time_delta=1, is_all=True))
     # print(date_time(1, special_date='2019-01-02 00:00:00'))
     # print(get_current_timestamp())

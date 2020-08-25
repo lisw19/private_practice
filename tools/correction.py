@@ -234,29 +234,6 @@ def param_type_assert(*args, **kargs):
     return decorator
 
 
-def check_seed_expression_type(seeds_info, expre_type='save'):
-    '''
-    为了兼容种子存储结构的变化而设立的方法, 待后续所有业务都使用了种子模板后可以去掉内层的 if 判断
-    :param seeds_info: 种子
-    :param expre_type: 是save保存数据, 还是 update更新过程表数据
-    :return: 返回见具体
-    '''
-    storage_info = seeds_info.get('storage_info')
-    store_expression = storage_info['expression']
-    if expre_type == 'save':
-        if isinstance(store_expression, dict):
-            store_info_expression = storage_info['expression']
-        else:
-            store_info_expression = storage_info['expression'][0]
-        return store_info_expression
-    if expre_type == 'update':
-        if isinstance(store_expression, dict):
-            process_table_update = storage_info['list_expression']
-        else:
-            process_table_update = storage_info['expression'][1]
-        return process_table_update
-
-
 if __name__ == '__main__':
     # @param_type_assert(d=int)
     # @param_type_assert(int, str)
