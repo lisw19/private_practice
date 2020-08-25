@@ -180,6 +180,16 @@ class Mysql(object):
         return res
 
     @staticmethod
+    def _multiple(sql, *args, **kwargs):
+        """
+        多参数预编译语句修改
+        :param sql: <str>
+        """
+        if len(kwargs.keys()) > 1 or len(args) > 1:
+            sql = sql.replace('{', '({').replace('}', '})')
+        return sql
+
+    @staticmethod
     def __single_line_parser(sql, item):
         """
         single line sql parser
@@ -214,7 +224,7 @@ class Mysql(object):
         :param kwargs: columns key-value
         :return:
         """
-        static = "INSERT INTO `%s` ({columns}) VALUES ({values})" % table
+        static = self._multiple("INSERT INTO `%s` {columns} VALUES {values};" % table, *args, **kwargs)
         sql = self.__multi_line_parser(table, static, *args, **kwargs)
         return self.execute_sql(sql)
 
@@ -227,27 +237,26 @@ class Mysql(object):
         :param kwargs: columns key-value
         :return:
         """
-        static = "INSERT IGNORE INTO `%s` ({columns}) VALUES ({values})" % table
+        static = self._multiple("INSERT IGNORE INTO `%s` {columns} VALUES {values};" % table, *args, **kwargs)
         sql = self.__multi_line_parser(table, static, *args, **kwargs)
         return self.execute_sql(sql, remedy)
 
-    def update(self, table, update_field: dict, update_by_field: dict):
-        '''
-        按条件更新某些字段
-        :param table: 表名
-        :param update_field: set 所需的字段, 必传
-        :param update_by_field: where 所需的条件字段, 必传
-        :return:
-        '''
-        set_list = list(
-            map(lambda x: f'{x[0]}={x[1]}' if isinstance(x[1], int) else f'{x[0]}="{x[1]}"', update_field.items()))
-        set_list = ','.join(set_list)
-        where_list = list(
-            map(lambda x: f'{x[0]}={x[1]}' if isinstance(x[1], int) else f'{x[0]}="{x[1]}"', update_by_field.items()))
-        where_list = ' and '.join(where_list)
-        sql = "UPDATE {table} SET {set_key} WHERE {where_key}".format(table=table, set_key=set_list,
-                                                                      where_key=where_list)
-        return self.execute_sql(sql)
+    # def update(self, table, update_field: dict, update_by_field: dict):
+    #     """
+    #     按条件更新某些字段
+    #     :param table: 表名
+    #     :param update_field: set 所需的字段
+    #     :param update_by_field: where 所需的条件字段
+    #     """
+    #     set_static = "UPDATE `%s`  set {columns} = {values}" % table
+    #     set_static = self._multiple(set_static, update_field)
+    #     set_sql = self.__multi_line_parser(table, set_static, **update_field)
+    #     res_sql = []
+    #     for _sql in set_sql:
+    #         update_static = self._multiple("%s WHERE {columns} = {values}" % _sql, update_by_field)
+    #         sql = self.__multi_line_parser(table, update_static, **update_by_field)
+    #         res_sql.extend(sql)
+    #     return self.execute_sql(res_sql)
 
     def replace(self, table, *args, **kwargs):
         """
@@ -257,7 +266,7 @@ class Mysql(object):
         :param kwargs: columns key-value
         :return:
         """
-        static = "REPLACE INTO `%s` ({columns}) VALUES ({values})" % table
+        static = self._multiple("REPLACE INTO `%s` {columns} VALUES {values};" % table, *args, **kwargs)
         sql = self.__multi_line_parser(table, static, *args, **kwargs)
         return self.execute_sql(sql)
 
@@ -269,7 +278,7 @@ class Mysql(object):
         :param kwargs: columns key-value
         :return:
         """
-        static = "DELETE FROM `%s`  WHERE {columns} = {values}" % table
+        static = self._multiple("DELETE FROM `%s`  WHERE {columns} = {values};" % table, *args, **kwargs)
         sql = self.__multi_line_parser(table, static, *args, **kwargs)
         return self.execute_sql(sql)
 
@@ -283,7 +292,7 @@ class Mysql(object):
         """
         static = 'SELECT * FROM %s' % table
         if args or kwargs:
-            static = 'SELECT * FROM %s WHERE {columns} = {values}' % table
+            static = self._multiple('SELECT * FROM %s WHERE {columns} = {values}' % table, *args, **kwargs)
         sql = self.__multi_line_parser(table, static, *args, **kwargs)
         sql = sql[0]
         return self.execute_sql(sql)
@@ -365,3 +374,10 @@ class Mysql(object):
         except Exception:
             print('[mysql close error],', traceback.format_exc())
         return None
+
+
+if __name__ == '__main__':
+    mysql_conn = Mysql(**{'host': '127.0.0.1', 'user': 'root', 'password': 'root', 'db': 'test_db'})
+    mysql_conn.insert_ignore('drug_html', **{'key_id': '123456789111', 'spider_time': '2020-08-23',
+                                             'str_len': '20', 'html': '<a>test</a>', 'key_mark': 'test'})
+    mysql_conn.close()
