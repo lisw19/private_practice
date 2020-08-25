@@ -27,3 +27,4 @@ LONG_COLUMN = {'TA': 10,
 ID_COLUMN = ['Approval / Registration No', 'Application No', 'Registration ID', 'Application No.']
 REGISTRSTION = {'Class': ['Class', 'Class/Target AZ Brand'],
                 'Related Molecular CH': ['Related Molecular CH', u'匹配库内中文成分词']
+                }
