@@ -242,7 +242,7 @@ ECECUTER = ThreadPoolExecutor(max_workers=MAX_THREAD_WORKER)
 def thread_pool(*, callbacks=(), callback_kwargs=()):
     """
     多线程装饰
-    :param callback:
+    :param callbacks:
     :param callback_kwargs:
     :return:
     """
