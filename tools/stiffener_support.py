@@ -7,6 +7,7 @@ import functools
 
 from copy import deepcopy
 from inspect import signature
+from concurrent.futures.thread import ThreadPoolExecutor
 
 
 class Check(object):
@@ -228,6 +229,37 @@ def param_type_assert(*args, **kargs):
                     if not isinstance(param_value, assert_param_dict[param_name]):
                         raise TypeError('[CHECK_PARAM] %s must be %s' % (param_name, assert_param_dict[param_name]))
             return func(*args, **kargs)
+
+        return wrapper
+
+    return decorator
+
+
+MAX_THREAD_WORKER = 8
+ECECUTER = ThreadPoolExecutor(max_workers=MAX_THREAD_WORKER)
+
+
+def thread_pool(*, callbacks=(), callback_kwargs=()):
+    """
+    多线程装饰
+    :param callback:
+    :param callback_kwargs:
+    :return:
+    """
+
+    def decorator(func):
+        @functools.wraps(func)
+        def wrapper(*args, **kwargs):
+            futuer = ECECUTER.submit(func, *args, **kwargs)
+            for index, callback in enumerate(callbacks):
+                try:
+                    kwargs = callback_kwargs[index]
+                except IndexError as E:
+                    print(f"[THREAD_POOL]{repr(E)}")
+                    kwargs = None
+                fn = functools.partial(callback, **kwargs) if kwargs else callback
+                futuer.add_done_callback(fn)
+            return futuer
 
         return wrapper
 
