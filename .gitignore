@@ -1,0 +1,16 @@
+### Example user template template
+### Example user template
+
+# IntelliJ project files
+.idea
+*.iml
+out
+gen
+.idea/.gitignore
+.idea/inspectionProfiles/
+.idea/misc.xml
+.idea/modules.xml
+.idea/private_python.iml
+.idea/vcs.xml
+asyn_task/__pycache__/
+asyn_task/asyn_task_works/__pycache__/
