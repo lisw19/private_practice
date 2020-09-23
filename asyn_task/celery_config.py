@@ -30,26 +30,26 @@ CELERY_DISABLE_RATE_LIMITS = True
 # 每个worker最多执行万100个任务就会被销毁，可防止内存泄露
 CELERYD_MAX_TASKS_PER_CHILD = 100
 
-# 设置不同队列
-CELERY_QUEUES = (
-    Queue('base_downloader', Exchange('base_downloader'),
-          routing_key='base_downloader'),
-    Queue('base_parser', Exchange('base_parser'), routing_key='base_parser'),
-    Queue('error_crawler', Exchange('error_crawler'), routing_key='error_crawler'),
-    Queue('priority_downloader', Exchange('priority_downloader'), routing_key='priority_downloader'),
-    Queue('infer_downloader', Exchange('infer_downloader'), routing_key='infer_downloader')
-)
-
-# 队列路由
-CELERY_ROUTES = {
-    'celery_recruit.celery_workers.downloader.request_crawler': {
-        'queue': 'base_downloader', 'routing_key': 'base_downloader'},
-    'celery_recruit.celery_workers.downloader.error_request_crawler': {
-        'queue': 'error_crawler', 'routing_key': 'error_crawler'},
-    'celery_recruit.celery_workers.downloader.priority_request_crawler': {
-        'queue': 'priority_downloader', 'routing_key': 'priority_downloader'},
-    'celery_recruit.celery_workers.downloader.infer_request_crawler': {
-        'queue': 'infer_downloader', 'routing_key': 'infer_downloader'},
-    'celery_recruit.celery_workers.parser.cfda_drugs_register_search_parse': {
-        'queue': 'base_parser', 'routing_key': 'base_parser'}
-}
+# # 设置不同队列
+# CELERY_QUEUES = (
+#     Queue('base_downloader', Exchange('base_downloader'),
+#           routing_key='base_downloader'),
+#     Queue('base_parser', Exchange('base_parser'), routing_key='base_parser'),
+#     Queue('error_crawler', Exchange('error_crawler'), routing_key='error_crawler'),
+#     Queue('priority_downloader', Exchange('priority_downloader'), routing_key='priority_downloader'),
+#     Queue('infer_downloader', Exchange('infer_downloader'), routing_key='infer_downloader')
+# )
+#
+# # 队列路由
+# CELERY_ROUTES = {
+#     'celery_recruit.celery_workers.downloader.request_crawler': {
+#         'queue': 'base_downloader', 'routing_key': 'base_downloader'},
+#     'celery_recruit.celery_workers.downloader.error_request_crawler': {
+#         'queue': 'error_crawler', 'routing_key': 'error_crawler'},
+#     'celery_recruit.celery_workers.downloader.priority_request_crawler': {
+#         'queue': 'priority_downloader', 'routing_key': 'priority_downloader'},
+#     'celery_recruit.celery_workers.downloader.infer_request_crawler': {
+#         'queue': 'infer_downloader', 'routing_key': 'infer_downloader'},
+#     'celery_recruit.celery_workers.parser.cfda_drugs_register_search_parse': {
+#         'queue': 'base_parser', 'routing_key': 'base_parser'}
+# }

@@ -248,6 +248,7 @@ def thread_pool(*, callbacks=(), callback_kwargs=()):
     """
 
     def decorator(func):
+
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
             futuer = ECECUTER.submit(func, *args, **kwargs)
