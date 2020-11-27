@@ -14,3 +14,5 @@ gen
 .idea/vcs.xml
 asyn_task/__pycache__/
 asyn_task/asyn_task_works/__pycache__/
+.DS_Store
+./venv
